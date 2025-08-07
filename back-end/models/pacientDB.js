@@ -1,4 +1,4 @@
-const conn = require('../dbConn');
+const conn = require('../db/dbConn');
 
 const pacientDB = {
     getAll: () => {
@@ -20,7 +20,7 @@ const pacientDB = {
     },
 
     create: (pacientData) => {
-        const { ime, priimek, email, telefon, datum_roj, ZZZS } = pacientData;
+        const { ime, priimek, email, password, telefon} = pacientData;
         
         return new Promise((resolve, reject) => {
             conn.query(
@@ -32,8 +32,8 @@ const pacientDB = {
                     const newId = res[0].max_id + 1;
 
                     conn.query(
-                    'INSERT INTO Pacient (pacient_id, ime, priimek, email, telefon, datum_roj, ZZZS) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                    [newId, ime, priimek, email, telefon, datum_roj, ZZZS],
+                    'INSERT INTO Pacient (pacient_id, ime, priimek, email, password, telefon) VALUES (?, ?, ?, ?, ?, ?)',
+                    [newId, ime, priimek, email, password, telefon],
                     (err2, res2) => {
                         if (err2) return reject(err2);
                         return resolve(res2);
@@ -49,24 +49,24 @@ const pacientDB = {
         return new Promise((resolve, reject) => {
             conn.query(
                 'SELECT * FROM Pacient WHERE email = ?', 
-                [username], // wrap in array to avoid SQL injection risk
-                (err, results) => {
-                    if (err) return reject(err);
-                    resolve(results[0]); // return only one user (if exists)
+                username, // wrap in array to avoid SQL injection risk
+                (err,res, fields)=>{
+                    if(err){return reject(err)}
+                    return resolve(res)
                 }
-            );
+            )
         });
     },
 
     update: (id, pacientData) => {
-        const { ime, priimek, email, telefon, datum_rojstva, ZZZS } = pacientData;
+        const { ime, priimek, email, password, telefon } = pacientData;
 
         return new Promise((resolve, reject) => {
             conn.query(
             `UPDATE Pacient 
-            SET ime = ?, priimek = ?, email = ?, telefon = ?, datum_rojstva = ?, ZZZS = ? 
+            SET ime = ?, priimek = ?, email = ?, password = ?, telefon = ?
             WHERE pacient_id = ?`,
-            [ime, priimek, email, telefon, datum_rojstva, ZZZS, id],
+            [ime, priimek, email, password, telefon, id],
             (err, result) => {
                 if (err) return reject(err);
                 resolve(result);

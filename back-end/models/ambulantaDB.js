@@ -1,4 +1,4 @@
-const conn = require('../dbConn');
+const conn = require('../db/dbConn');
 
 const ambulantaDB = {
     getAll: () => {
@@ -20,7 +20,7 @@ const ambulantaDB = {
     },
 
     create: (ambulantaData) => {
-        const { ime, naslov, telefon, email, opis } = ambulantaData;
+        const { password, ime, naslov, telefon, email, opis } = ambulantaData;
         
         return new Promise((resolve, reject) => {
             conn.query(
@@ -35,8 +35,8 @@ const ambulantaDB = {
                     const sqlDate = dan_reg.toISOString().split('T')[0];
 
                     conn.query(
-                    'INSERT INTO Ambulanta (ambulanta_id, ime, naslov, telefon, email, opis, datum_reg) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                    [newId, ime, naslov, telefon, email, opis, sqlDate],
+                    'INSERT INTO Ambulanta (ambulanta_id, password, ime, naslov, telefon, email, opis, datum_reg) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                    [newId, password, ime, naslov, telefon, email, opis, sqlDate],
                     (err2, res2) => {
                         if (err2) return reject(err2);
                         return resolve(res2);
@@ -67,9 +67,9 @@ const ambulantaDB = {
         return new Promise((resolve, reject) => {
             conn.query(
             `UPDATE Ambulanta 
-            SET ime = ?, naslov = ?, telefon = ?, email = ?, opis = ? 
+            SET password = ?, ime = ?, naslov = ?, telefon = ?, email = ?, opis = ? 
             WHERE ambulanta_id = ?`,
-            [ime, naslov, telefon, email, opis, id],
+            [password, ime, naslov, telefon, email, opis, id],
             (err, result) => {
                 if (err) return reject(err);
                 resolve(result);

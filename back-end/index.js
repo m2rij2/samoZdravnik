@@ -1,12 +1,16 @@
+//Basic packages
 const express = require('express')
+require('dotenv').config()
 const session = require('express-session')
 const cors=require("cors")
 const cookieParser = require("cookie-parser");
 
 
-require('dotenv').config()
-const app = express()
+
+const app = express() //Create an instace of ExpressJS
 const port = process.env.PORT || 5049
+
+console.log('./models/pacientDB.js'==1)
 
 app.use(cookieParser());
 
@@ -69,6 +73,16 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const pacient = require('./routes/pacient')
+const zdravnik = require('./routes/zdravnik')
+const ambulanta = require('./routes/ambulanta')
+
+app.use('/p', pacient)
+app.use('/z', zdravnik)
+app.use('/a', ambulanta)
+
+/* od profesorja -----------------------------------
 const novice = require('./routes/novice')
 const users = require('./routes/users')
 const upload = require('./routes/upload')
@@ -76,6 +90,7 @@ const upload = require('./routes/upload')
 app.use('/novice', novice)
 app.use('/users', users)
 app.use('/uplodeFile', upload)
+*///-------------------------------------------------
 
 const path = require('path')
 app.use(express.static(path.join(__dirname, "build")))

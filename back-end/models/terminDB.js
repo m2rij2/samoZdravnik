@@ -1,4 +1,4 @@
-const conn = require('../dbConn');
+const conn = require('../db/dbConn');
 
 const terminDB = {
 

@@ -1,4 +1,4 @@
-const conn = require('../dbConn');
+const conn = require('../db/dbConn');
 
 const zdravnikDB = {
 
@@ -21,7 +21,7 @@ const zdravnikDB = {
     },
 
     create: (zdravnikData) => {
-        const { ime, priimek, naziv, specializacija, ambulanta_id, opis} = zdravnikData;
+        const { password, ime, priimek, naziv, specializacija, ambulanta_id, opis} = zdravnikData;
         
         return new Promise((resolve, reject) => {
             conn.query(
@@ -33,8 +33,8 @@ const zdravnikDB = {
                     const newId = res[0].max_id + 1;
 
                     conn.query(
-                    'INSERT INTO Zdravnik (zdravnik_id, ime, priimek, naziv, specializacija, ambulanta_id, opis) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                    [newId, ime, priimek, naziv, specializacija, ambulanta_id, opis],
+                    'INSERT INTO Zdravnik (zdravnik_id, password, ime, priimek, naziv, specializacija, ambulanta_id, opis) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                    [newId, password, ime, priimek, naziv, specializacija, ambulanta_id, opis],
                     (err2, res2) => {
                         if (err2) return reject(err2);
                         return resolve(res2);
@@ -64,10 +64,10 @@ const zdravnikDB = {
 
         return new Promise((resolve, reject) => {
             conn.query(
-            `UPDATE Ambulanta 
-            SET ime = ?, priimek = ?, naziv = ?, specializacija = ?, ambulanta_id = ?, opis = ?
+            `UPDATE Zdravnik 
+            SET password = ?, ime = ?, priimek = ?, naziv = ?, specializacija = ?, ambulanta_id = ?, opis = ?
             WHERE zdravnik_id = ?`,
-            [ime, priimek, naziv, specializacija, ambulanta_id, opis, id],
+            [ password, ime, priimek, naziv, specializacija, ambulanta_id, opis, id],
             (err, result) => {
                 if (err) return reject(err);
                 resolve(result);
